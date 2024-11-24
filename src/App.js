@@ -1,25 +1,85 @@
-import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/Navbar'
+import useVoiceNavigation from './useVoiceNavigation';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { useState } from 'react';
 
-function App() {
+const App = () => {
+  console.log("App is runnning")
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <div classname="App">
+        <VoiceNavigationWrapper />
+        <Navbar/>
+      </div>
+    </Router>
+  )
 }
+
+
+const VoiceNavigationWrapper = () => {
+
+  const { listenToSpeech, stopListening } = useVoiceNavigation();
+  const [isListening, setIsListening] = useState(false);
+
+
+  const processListening = () => {
+    listenToSpeech();
+    setIsListening(true);
+  }
+
+  const processStopListening = () => {
+    stopListening();
+    setIsListening(false);
+  }
+
+  return (
+    <div style={styles.wrapper}>
+      {
+        !isListening ? (<button style={styles.startButton} onClick={processListening}>Start Voice Navigation</button>) : (<button style={styles.stopButton} onClick={processStopListening}>Stop Voice Navigation</button>)
+      }
+      <p style={styles.buttonStatus}>{isListening ? 'Voice Navigator Activate': 'Voice Navigatore Inactive'}</p>
+    </div>
+  )
+};
+
+const styles = {
+  wrapper: {
+    position: "fixed",
+    top: "120px",
+    right: "10px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  startButton: {
+    padding: "10px 20px",
+    fontSize: "1rem",
+    backgroundColor: "#34ff06",
+    color: "black",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    transition: "all 0.3s ease",
+  },
+  stopButton: {
+    padding: "10px 20px",
+    fontSize: "1rem",
+    backgroundColor: "#ff0000",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    transition: "all 0.3s ease",
+  },
+  buttonStatus: {
+    marginTop: "10px",
+    fontSize: "1rem",
+    color: "white",
+    textShadow: "2px 4px 6px rgba(0,0,0,0.3)",
+  },
+};
 
 export default App;
